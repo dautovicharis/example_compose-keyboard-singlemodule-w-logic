@@ -1,2 +1,3 @@
 rootProject.name = "composekeyboardperformance"
 include ':app'
+include ':ui'
