@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,9 +42,11 @@ fun Keyboard(keyboard: Keyboard) {
             Log.d("MOVL", "DebugKeyboard:constraintLayout")
 
             val refs: List<List<Pair<Key, ConstrainedLayoutReference>>> =
-                keyboard.map { row ->
-                    row.map {
-                        it to createRef()
+                remember {
+                    keyboard.map { row ->
+                        row.map {
+                            it to createRef()
+                        }
                     }
                 }
 
@@ -63,34 +66,38 @@ fun Keyboard(keyboard: Keyboard) {
                 row.forEachIndexed { columnIndex, key ->
                     val ref = refsMap[key] ?: error("Impossible state")
 
-                    val modifier = Modifier.constrainAs(ref) {
+                    val modifier = remember {
+                        Modifier.constrainAs(ref) {
 
 
-                        if (columnIndex == 0) start.linkTo(
-                            startGuideline
-                        )
-                        if (columnIndex == row.lastIndex) end.linkTo(
-                            endGuideline
-                        )
+                            if (columnIndex == 0) start.linkTo(
+                                startGuideline
+                            )
+                            if (columnIndex == row.lastIndex) end.linkTo(
+                                endGuideline
+                            )
 
-                        //Top
-                        if (rowIndex == 0) {
-                            top.linkTo(parent.top)
-                        } else {
-                            refsMap[keyboard[rowIndex - 1][0]]?.let {
-                                top.linkTo(it.bottom)
+                            //Top
+                            if (rowIndex == 0) {
+                                top.linkTo(parent.top)
+                            } else {
+                                refsMap[keyboard[rowIndex - 1][0]]?.let {
+                                    top.linkTo(it.bottom)
+                                }
                             }
+
+                            height = Dimension.fillToConstraints
+
+                        }.fillMaxWidth(key.weight)
+                    }
+
+                    val modifierPressed = remember {
+                        Modifier.constrainAs(createRef()) {
+                            start.linkTo(ref.start)
+                            end.linkTo(ref.end)
+                            bottom.linkTo(ref.bottom)
+                            width = Dimension.fillToConstraints
                         }
-
-                        height = Dimension.fillToConstraints
-
-                    }.fillMaxWidth(key.weight)
-
-                    val modifierPressed = Modifier.constrainAs(createRef()) {
-                        start.linkTo(ref.start)
-                        end.linkTo(ref.end)
-                        bottom.linkTo(ref.bottom)
-                        width = Dimension.fillToConstraints
                     }
 
                     KeyLayout(
