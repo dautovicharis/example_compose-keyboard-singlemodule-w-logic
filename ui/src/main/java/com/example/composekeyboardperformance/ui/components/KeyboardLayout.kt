@@ -11,14 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.composekeyboardperformance.components.Keyboard
-import com.example.composekeyboardperformance.ui.standardkeyboard
+import com.example.composekeyboardperformance.ui.Mapping
+import com.example.composekeyboardperformance.ui.Mappings
+import com.example.composekeyboardperformance.ui.model.Keyboard
 
 
 @Composable
-fun KeyboardLayout() {
-    val fonts = remember { listOf("Category1", "Category2", "Category3", "Category4", "Category5") }
-    val (font, setFont) = remember { mutableStateOf<String>("Default") }
-    Log.d("MOVL", "$font,$fonts")
+fun KeyboardLayout(mappings: List<Pair<Mapping, Keyboard>>) {
+    val (mapping, setMapping) = remember { mutableStateOf<Pair<Mapping, Keyboard>>(mappings[0]) }
     Column(Modifier.border(1.dp, Color.Blue)) {
         ConstraintLayout(Modifier.fillMaxWidth().border(1.dp, Color.Red)) {
             val (button, bar) = createRefs()
@@ -29,9 +29,9 @@ fun KeyboardLayout() {
                     start.linkTo(button.end)
                     end.linkTo(parent.end)
                 },
-                list = fonts,
-                onSelected = setFont,
-                selected = font
+                list = mappings.map { it.first },
+                onSelected = { i, m -> setMapping(mappings[i]) },
+                selected = mapping.first
             )
 
             BadgeButton(Modifier.constrainAs(button) {
@@ -41,7 +41,7 @@ fun KeyboardLayout() {
             })
 
         }
-        Keyboard(keyboard = standardkeyboard)
+        Keyboard(keyboard = mapping.second)
     }
 
 }

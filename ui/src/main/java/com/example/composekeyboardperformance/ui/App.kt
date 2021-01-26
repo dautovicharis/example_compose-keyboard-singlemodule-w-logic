@@ -7,18 +7,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.composekeyboardperformance.ui.components.KeyboardLayout
+import com.example.composekeyboardperformance.ui.model.Keyboard
 import com.example.composekeyboardperformance.ui.theme.AppTheme
 
 
 @Composable
-fun App() {
+fun App(keyboards : List<Pair<Mapping,Keyboard>>) {
     AppTheme {
         Column(
             modifier = Modifier
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.Center
         ) {
-            KeyboardLayout()
+            KeyboardLayout(keyboards)
         }
     }
 }

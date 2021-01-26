@@ -16,7 +16,7 @@ fun KeyboardBuilder.row(
     this.add(scope.build())
 }
 
-fun KeyboardBuilder.row(vararg elements: String, width: Float = 1.0f) {
+fun KeyboardBuilder.row(elements: List<String>, width: Float = 1.0f) {
     val scope = KeyRowBuilder(width)
     elements.forEach {
         scope.add(
